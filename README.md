@@ -1,6 +1,7 @@
 ## Socket integration with REACT
 
-```npm i socket.io-client
+```
+npm i socket.io-client
 
 ```
 
