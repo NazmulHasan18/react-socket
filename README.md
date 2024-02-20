@@ -14,18 +14,84 @@ first install socket.io-client in react using npm
 
 const ChatBox =()=>{
 
-#### use useRef to create references for socket
+// use useRef to create references for socket
 
   const socket = useRef();
 
-#### use useEffect to initialize socket.io-client
+// use useEffect to initialize socket.io-client
 
    useEffect(() => {
-    socket.current = io("Here use your server side link where server is running"); //http://localhost:4000/
+    socket.current = io("Here use your server side link where server is running"); // http://localhost:4000/
  }, []);
 
 }
 
 ```
 
+### after initialization now you are ready to use
+
+**In socket there is two word _on_ & _emit_ to impliment socket**
+
+**Emit:** emit work like post and take two argument 1 is emit name and 2 is data you want to emit.
+
+**on:** on work like get. By emit you sending a data and using _on_ you can receive data. Here socket.on('emit name', (arg)=>{console.log(arg)})
+
+socket on take two arguments where 1st is emit name and 2nd data is a callback function what take a arguments that contain the data.
+
 \*\*
+
+```
+useEffect(() => {
+      socket?.current?.emit("addUsers", sender?._id);
+   }, [sender]);
+
+here in socket emit you are sending user id (user firebase id/user mongodb id)
+
+```
+
+```
+   const handelMessage = (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      const text = e.currentTarget.text.value;
+      const messageObj = {
+         supportId,
+         receiver: admin ? supportDetails.customerId._id : supportDetails.supportAgent,
+         sender: admin ? supportDetails.supportAgent : supportDetails.customerId._id,
+         text,
+      };
+      // console.log(messageObj);
+      socket?.current?.emit("message", messageObj);
+
+
+      // Here emit message sending message data to server
+
+
+      setMessage([...message, messageObj as TMessage]);
+      e.currentTarget.reset();
+
+// Here store message in database
+
+      fetch("http://localhost:4000/api/v2/create/message", {
+         method: "POST",
+         headers: {
+            "Content-Type": "application/json",
+         },
+         body: JSON.stringify(messageObj),
+      })
+         .then((res) => res.json())
+         .then((data) => console.log(data));
+   };
+
+// here getting all messages from database with support id
+
+   useEffect(() => {
+      fetch(`http://localhost:4000/api/v2/messages/${supportId}`)
+         .then((res) => res.json())
+         .then((data) => setMessage(data?.response?.messages));
+   }, [supportId]);
+
+// supportId you will get after creating support.
+
+```
+
+and all data should be store in frontend using state so that after every request it rerender the react component or ui
