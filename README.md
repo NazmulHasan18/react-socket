@@ -98,13 +98,15 @@ and all data should be store in frontend using state so that after every request
 
 # here socket.current.on is using for creating React reference.
 
-usually socket call either socket.emit or socket.on
+### usually socket call either socket.emit or socket.on
 
+```
 socket.emit('emitName', {name: "nazmul Hasan", position: "full stack developer"})
 socket.on('emitName', (arg)=>{
 console.log(arg)
 
 _/output: {name: "nazmul Hasan", position: "full stack developer"}/_
 })
+```
 
 all file references in ChatBox.tsx file and **must use same name of emit and on that i use or else it on work cause backend using same name.**
